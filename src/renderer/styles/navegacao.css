@@ -1,0 +1,4 @@
+/* ---------- Barra de navegação ---------- */
+nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); flex-shrink: 0; background: var(--tinta); box-shadow: 0 0 0 100vmax var(--tinta); clip-path: inset(0 -100vmax); }
+nav button { height: 60px; border: 0; background: none; color: var(--creme); font: 700 15px var(--titulo); cursor: pointer; transition: color var(--rapido); }
+nav button[aria-current="page"] { color: var(--mostarda); box-shadow: inset 0 3px 0 var(--mostarda); }

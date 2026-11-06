@@ -1,0 +1,11 @@
+/* ---------- Superfícies ---------- */
+.cartao { display: flex; flex-direction: column; gap: 10px; padding: 16px; background: var(--cartao); border: 3px double var(--tinta); color: var(--tinta); text-decoration: none; }
+.painel { display: flex; flex-direction: column; padding: 12px 14px; background: var(--cartao); border: 1px solid var(--tinta); }
+.painel .rotulo + * { margin-top: 4px; }
+button.cartao { width: 100%; text-align: left; font: inherit; cursor: pointer; transition: background-color var(--rapido); }
+button.cartao:active { background: var(--toque); }
+.titulo-cartao { font-size: 26px; font-weight: 700; line-height: 1.1; }
+
+/* Régua de progresso: traços impressos e uma costura vermelha. */
+.regua { position: relative; height: 26px; background-image: repeating-linear-gradient(90deg, var(--tinta) 0 1px, transparent 1px 8px); background-size: 100% 9px; background-repeat: no-repeat; border-bottom: 1px solid var(--tinta); }
+.costura { position: absolute; left: 0; bottom: 4px; border-bottom: 2px dashed var(--sangue); transition: width .28s ease-out; }

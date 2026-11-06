@@ -1,0 +1,18 @@
+/* Conceito: impresso de ateliê antigo. Cada cosplay é um envelope de molde.
+   O fundo kraft escuro destaca os cartões em kraft claro. Visual único, sem modo escuro. */
+:root {
+  color-scheme: light;
+  --fundo: #B8A47C;      /* fundo geral da tela */
+  --cartao: #DDCBA4;     /* cartões, listas e etiquetas */
+  --campo: #F3E9D2;      /* interior dos campos de formulário */
+  --toque: #E3D2AC;      /* retorno visual ao tocar em algo */
+  --tinta: #2B2118;      /* texto principal e barra de navegação */
+  --suave: #5C4A37;      /* texto secundário, usar só sobre o cartão */
+  --sangue: #7A2418;     /* cor de destaque */
+  --linha: #A8926B;      /* linhas de caderno */
+  --mostarda: #E3B04B;   /* aba ativa na barra escura */
+  --creme: #F3E9D2;      /* texto sobre fundos escuros */
+  --titulo: 'Old Standard TT', Georgia, 'Times New Roman', serif;
+  --nota: 'Special Elite', 'Courier New', monospace;
+  --rapido: .14s;        /* duração padrão das animações */
+}

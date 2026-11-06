@@ -1,0 +1,6 @@
+{
+  // Projeto "guarda-chuva": cada parte do app tem a sua própria configuração,
+  // porque o processo principal (Node) e a interface (navegador) usam APIs diferentes.
+  "files": [],
+  "references": [{ "path": "./tsconfig.node.json" }, { "path": "./tsconfig.web.json" }, { "path": "./tsconfig.test.json" }]
+}

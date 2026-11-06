@@ -1,0 +1,10 @@
+/* ---------- Calendário ---------- */
+.mes { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.seta { width: 44px; height: 44px; border: 0; background: none; color: var(--tinta); font: 700 24px var(--titulo); cursor: pointer; }
+.grade { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); row-gap: 2px; padding: 14px 8px; background: var(--cartao); border: 3px double var(--tinta); }
+.grade span { padding-bottom: 8px; text-align: center; font-size: 15px; font-style: italic; color: var(--suave); }
+.grade button { justify-self: center; width: 42px; height: 42px; padding: 0; border: 1.5px solid transparent; border-radius: 50%; background: none; color: var(--tinta); font: 19px var(--titulo); cursor: pointer; text-underline-offset: 5px; transition: border-color var(--rapido); }
+.grade button.domingo { color: var(--sangue); }
+.grade button.prazo { color: var(--sangue); font-weight: 700; text-decoration: underline dashed; }
+.grade button.hoje { font-weight: 700; background: var(--toque); }
+.grade button.dia-ativo { border-color: var(--sangue); }

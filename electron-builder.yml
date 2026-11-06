@@ -1,0 +1,77 @@
+# Configuração do empacotamento do Alinhavo (electron-builder).
+# Gera o instalador (NSIS) e a versão portátil na pasta "release".
+# O app NÃO é assinado digitalmente e nada é publicado.
+
+appId: br.alinhavo.app          # igual ao app.setAppUserModelId() do código: necessário para as notificações
+productName: Alinhavo
+copyright: Copyright © 2026 Gabriel Coelho
+executableName: Alinhavo
+
+directories:
+  output: release
+  buildResources: build
+
+# O que entra no pacote do app. Só o código compilado (out/) e o mínimo do módulo nativo.
+files:
+  - out/**
+  - package.json
+  # better-sqlite3: só o necessário no Windows x64 (o resto é código-fonte e binários de outros sistemas).
+  - "!node_modules/better-sqlite3/{deps,src}/**"
+  - "!node_modules/better-sqlite3/binding.gyp"
+  - "!node_modules/better-sqlite3/prebuilds/*"
+  - node_modules/better-sqlite3/prebuilds/win32-x64.node
+  - "!node_modules/better-sqlite3/README.md"
+  # node-addon-api só serve para COMPILAR o módulo; não é usado em execução.
+  - "!node_modules/node-addon-api/**"
+
+# Ícones fora do pacote .asar: o Windows lê o ícone da janela e das notificações direto do disco.
+extraResources:
+  - from: resources
+    to: recursos
+    filter:
+      - icone.png
+      - bandeja.png
+  # Licenças das fontes (SIL OFL e Apache 2.0), distribuídas junto com o app.
+  - from: src/renderer/assets/fonts
+    to: recursos/licencas
+    filter:
+      - LICENSE-*.txt
+
+asar: true
+# O binário nativo do SQLite precisa ficar fora do .asar para poder ser carregado.
+asarUnpack:
+  - node_modules/better-sqlite3/prebuilds/win32-x64.node
+
+# Usa o binário N-API pré-compilado do better-sqlite3 para Windows x64.
+npmRebuild: false
+nodeGypRebuild: false
+buildDependenciesFromSource: false
+
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+  # Sem certificado: o app não é assinado.
+  forceCodeSigning: false
+
+nsis:
+  artifactName: Alinhavo-Instalador-${version}.${ext}
+  oneClick: false                          # mostra o assistente de instalação
+  perMachine: false                        # instala só para o usuário atual (não pede administrador)
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Alinhavo
+  uninstallDisplayName: Alinhavo
+  language: "1046"                         # português do Brasil
+  runAfterFinish: true
+  deleteAppDataOnUninstall: false          # desinstalar NUNCA apaga os dados e as fotos do usuário
+
+portable:
+  artifactName: Alinhavo-Portatil-${version}.${ext}
+
+# Nada é publicado.
+publish: null

@@ -1,0 +1,6 @@
+/* ---------- Etiquetas de compra ---------- */
+.etiquetas { display: flex; flex-direction: column; gap: 10px; }
+.etiqueta { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; width: 100%; padding: 14px 16px 14px 42px; border: 0; color: var(--tinta); text-align: left; font: inherit; cursor: pointer; background-color: var(--cartao); background-image: radial-gradient(circle at 21px 50%, var(--fundo) 0 6px, var(--tinta) 6px 7px, transparent 7.5px); clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 calc(100% - 14px), 0 14px); transition: background-color var(--rapido); }
+.etiqueta:active { background-color: var(--toque); }
+.preco { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.direita { text-align: right; }

@@ -1,0 +1,21 @@
+# Dependências e arquivos gerados: não entram no controle de versão.
+node_modules/
+out/
+release/
+*.log
+
+# Dados pessoais e configurações locais
+.env
+.env.*
+!.env.example
+*.db
+*.db-shm
+*.db-wal
+*.bak
+*.tmp
+*.tsbuildinfo
+coverage/
+.vite/
+.alinhavo-dados/
+alinhavo-backup-*.zip
+alinhavo-backup-*.json

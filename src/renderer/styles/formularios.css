@@ -1,0 +1,13 @@
+/* ---------- Folha de formulário ---------- */
+.veu { position: fixed; inset: 0; z-index: 20; display: flex; align-items: flex-end; justify-content: center; background: rgba(43, 33, 24, .55); animation: veu .14s ease-out both; }
+.folha { width: 100%; max-width: 480px; max-height: 88%; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding-top: 18px; padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--cartao); border-top: 3px double var(--tinta); animation: subir .18s ease-out both; }
+.folha h2 { font-size: 26px; line-height: 1.1; }
+.folha form { display: flex; flex-direction: column; gap: 12px; }
+.campo { display: flex; flex-direction: column; gap: 4px; }
+.campo input, .campo select, .campo textarea { width: 100%; min-height: 46px; padding: 9px 10px; border: 1px solid var(--tinta); border-radius: 0; background: var(--campo); color: var(--tinta); font: 17px var(--titulo); }
+.campo textarea { min-height: 88px; resize: vertical; }
+@keyframes veu { from { opacity: 0; } }
+@keyframes subir { from { transform: translateY(24px); opacity: .6; } }
+
+/* Link "Abrir link da loja", que parece um botão (antes era um style="" no HTML). */
+.botao.botao-link { display: grid; place-items: center; text-decoration: none; }

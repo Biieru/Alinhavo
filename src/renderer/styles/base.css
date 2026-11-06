@@ -1,0 +1,38 @@
+/* ---------- Base (equivale ao reset do protótipo) ---------- */
+:root { box-sizing: border-box; }
+img { max-width: 100%; }
+/* Garante que o atributo "hidden" realmente esconde o elemento. */
+[hidden]:not([hidden=until-found i]) { display: none !important; }
+
+/* ---------- Estrutura geral ---------- */
+html, body { height: 100%; }
+body { margin: 0; padding: 0; background: var(--fundo); color: var(--tinta); font-family: var(--titulo); font-size: 17px; }
+* { box-sizing: border-box; }
+#app { height: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; }
+#tela { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.pagina {
+  display: flex; flex-direction: column; gap: 16px;
+  padding-block: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.entrar { animation: entrar .16s ease-out both; }
+@keyframes entrar { from { opacity: 0; transform: translateY(4px); } }
+
+/* Lista de moldes do catálogo: uma coluna aqui; em janelas largas vira duas (janelas-grandes.css). */
+.lista-moldes { display: flex; flex-direction: column; gap: 16px; }
+
+/* ---------- Tipografia ---------- */
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: 36px; line-height: 1.06; font-weight: 700; text-wrap: balance; }
+.rotulo { font-family: var(--nota); font-size: 13px; font-weight: 400; color: var(--sangue); }
+header .rotulo { color: var(--tinta); }
+.apoio { font-size: 16px; line-height: 1.35; color: var(--suave); }
+.italico { font-style: italic; }
+.cabeca { display: flex; flex-direction: column; gap: 6px; }
+.cabeca-linha { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+
+/* Mensagem curta depois de uma ação. */
+#aviso { position: fixed; z-index: 30; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); max-width: calc(100% - 32px); padding: 10px 14px; background: var(--tinta); color: var(--creme); font-size: 16px; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

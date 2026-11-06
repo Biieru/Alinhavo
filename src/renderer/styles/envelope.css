@@ -1,0 +1,7 @@
+/* ---------- Envelope do molde ---------- */
+.envelope { display: flex; flex-direction: column; gap: 6px; padding: 18px; background: var(--sangue); color: var(--creme); outline: 1px solid #F0D9A8; outline-offset: -6px; }
+.envelope .rotulo, .envelope .apoio { color: #F0D9A8; }
+.envelope h1 { font-size: 46px; line-height: 1; overflow-wrap: anywhere; }
+.envelope .botao { align-self: flex-start; min-height: 44px; border-color: #F0D9A8; color: var(--creme); }
+.envelope .botao:active { background: #5F1B12; }
+.entre { display: flex; justify-content: space-between; gap: 12px; }

@@ -1,0 +1,31 @@
+/*
+  Adaptação para janelas grandes do computador.
+
+  Só muda a LARGURA e a distribuição do conteúdo. Cores, fontes, bordas, textos e todos os
+  componentes continuam exatamente como no layout de coluna única.
+
+  - A partir de 520 px, a área de rolagem passa a ocupar a janela inteira (a barra de rolagem
+    fica na borda da janela) e o conteúdo fica numa coluna centralizada.
+  - A coluna cresce com a janela: 480 px -> 720 px -> 960 px.
+*/
+@media (min-width: 520px) {
+  :root { --coluna: 480px; }
+  #app { max-width: none; }
+  .pagina { width: 100%; max-width: var(--coluna); margin-inline: auto; }
+  nav { width: 100%; max-width: var(--coluna); margin-inline: auto; }
+  .folha { max-width: var(--coluna); }
+}
+
+@media (min-width: 800px) {
+  :root { --coluna: 720px; }
+  .galeria { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .contas { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .etiquetas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lista-moldes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1200px) {
+  :root { --coluna: 960px; }
+  .galeria { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .folha { max-width: 640px; }
+}

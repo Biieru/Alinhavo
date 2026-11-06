@@ -1,0 +1,7 @@
+/* ---------- Medidas ---------- */
+.medida { display: flex; align-items: center; gap: 8px; min-height: 50px; border-bottom: 1px solid var(--linha); }
+.medida:last-child { border-bottom: 0; }
+.medida label { flex: 1; min-width: 0; font-size: 18px; }
+.medida input { width: 68px; height: 40px; padding: 0 4px; text-align: right; border: 0; border-bottom: 1.5px dashed var(--sangue); background: none; color: var(--tinta); font: 17px var(--nota); }
+.medida input:focus { background: var(--toque); }
+.medida .tirar { width: 36px; height: 44px; border: 0; background: none; color: var(--sangue); font: 700 20px var(--titulo); cursor: pointer; }

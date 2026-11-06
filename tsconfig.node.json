@@ -1,0 +1,23 @@
+﻿{
+  // Configuração do processo principal, do preload, do código compartilhado do código compartilhado.
+  // Tudo aqui roda em Node.js (dentro do Electron ).
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "paths": { "@shared/*": ["./src/shared/*"] },
+    "types": ["node", "electron-vite/node"],
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true
+  },
+  "include": ["src/main/**/*", "src/preload/**/*", "src/shared/**/*", "electron.vite.config.ts", "vitest.config.mts"]
+}

@@ -1,0 +1,981 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Alinhavo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap">
+<style>
+/* Conceito: impresso de ateliê antigo. Cada cosplay é um envelope de molde.
+   O fundo kraft escuro destaca os cartões em kraft claro. Visual único, sem modo escuro. */
+:root {
+  color-scheme: light;
+  --fundo: #B8A47C;      /* fundo geral da tela */
+  --cartao: #DDCBA4;     /* cartões, listas e etiquetas */
+  --campo: #F3E9D2;      /* interior dos campos de formulário */
+  --toque: #E3D2AC;      /* retorno visual ao tocar em algo */
+  --tinta: #2B2118;      /* texto principal e barra de navegação */
+  --suave: #5C4A37;      /* texto secundário, usar só sobre o cartão */
+  --sangue: #7A2418;     /* cor de destaque */
+  --linha: #A8926B;      /* linhas de caderno */
+  --mostarda: #E3B04B;   /* aba ativa na barra escura */
+  --creme: #F3E9D2;      /* texto sobre fundos escuros */
+  --titulo: 'Old Standard TT', Georgia, 'Times New Roman', serif;
+  --nota: 'Special Elite', 'Courier New', monospace;
+  --rapido: .14s;        /* duração padrão das animações */
+}
+
+/* ---------- Estrutura geral ---------- */
+html, body { height: 100%; }
+body { background: var(--fundo); color: var(--tinta); font-family: var(--titulo); font-size: 17px; }
+* { box-sizing: border-box; }
+#app { height: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; }
+#tela { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.pagina {
+  display: flex; flex-direction: column; gap: 16px;
+  padding-block: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.entrar { animation: entrar .16s ease-out both; }
+@keyframes entrar { from { opacity: 0; transform: translateY(4px); } }
+
+/* ---------- Tipografia ---------- */
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: 36px; line-height: 1.06; font-weight: 700; text-wrap: balance; }
+.rotulo { font-family: var(--nota); font-size: 13px; font-weight: 400; color: var(--sangue); }
+header .rotulo { color: var(--tinta); }
+.apoio { font-size: 16px; line-height: 1.35; color: var(--suave); }
+.italico { font-style: italic; }
+.cabeca { display: flex; flex-direction: column; gap: 6px; }
+.cabeca-linha { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+
+/* ---------- Superfícies ---------- */
+.cartao { display: flex; flex-direction: column; gap: 10px; padding: 16px; background: var(--cartao); border: 3px double var(--tinta); color: var(--tinta); text-decoration: none; }
+.painel { display: flex; flex-direction: column; padding: 12px 14px; background: var(--cartao); border: 1px solid var(--tinta); }
+.painel .rotulo + * { margin-top: 4px; }
+button.cartao { width: 100%; text-align: left; font: inherit; cursor: pointer; transition: background-color var(--rapido); }
+button.cartao:active { background: var(--toque); }
+.titulo-cartao { font-size: 26px; font-weight: 700; line-height: 1.1; }
+
+/* Régua de progresso: traços impressos e uma costura vermelha. */
+.regua { position: relative; height: 26px; background-image: repeating-linear-gradient(90deg, var(--tinta) 0 1px, transparent 1px 8px); background-size: 100% 9px; background-repeat: no-repeat; border-bottom: 1px solid var(--tinta); }
+.costura { position: absolute; left: 0; bottom: 4px; border-bottom: 2px dashed var(--sangue); transition: width .28s ease-out; }
+
+/* ---------- Botões ---------- */
+.botao { min-height: 48px; padding: 8px 14px; border: 1.5px dashed var(--tinta); background: transparent; color: var(--tinta); font: 700 17px var(--titulo); cursor: pointer; transition: background-color var(--rapido); }
+.botao:active { background: var(--toque); }
+.botao.cheio { border: 0; background: var(--tinta); color: var(--creme); }
+.botao.cheio:active { background: var(--sangue); }
+.botao.perigo { border-color: var(--sangue); color: var(--sangue); }
+.botao.perigo.armado { border-style: solid; background: var(--sangue); color: var(--creme); }
+.botoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.botoes > .botao { flex: 1 1 130px; }
+.voltar { display: flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: var(--tinta); font: 700 16px var(--titulo); cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--sangue); outline-offset: 2px; }
+
+/* ---------- Abas ---------- */
+.abas { display: flex; gap: 2px; overflow-x: auto; border-bottom: 1px solid var(--tinta); }
+.abas button { flex: 1 0 auto; min-height: 44px; padding: 0 9px; border: 0; background: none; color: var(--tinta); font: 700 16px var(--titulo); cursor: pointer; }
+.abas button[aria-selected="true"] { box-shadow: inset 0 -3px 0 var(--tinta); }
+
+/* ---------- Linhas de lista ---------- */
+.linha { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 58px; padding: 7px 0; border: 0; border-bottom: 1px solid var(--linha); background: none; color: var(--tinta); text-align: left; font: inherit; }
+.linha:last-child { border-bottom: 0; }
+button.linha { cursor: pointer; transition: background-color var(--rapido); }
+button.linha:active { background: var(--toque); }
+.linha-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+.forte { font-size: 18px; font-weight: 700; }
+.marcar { width: 44px; height: 44px; margin: -6px; flex-shrink: 0; display: grid; place-items: center; }
+.marcar input { width: 22px; height: 22px; margin: 0; accent-color: var(--sangue); }
+/* Risco desenhado da esquerda para a direita quando a tarefa é concluída. */
+.riscavel { align-self: flex-start; background-image: linear-gradient(var(--sangue), var(--sangue)); background-repeat: no-repeat; background-position: 0 55%; background-size: 0 2px; transition: background-size .18s ease-out; }
+.feita .riscavel { background-size: 100% 2px; }
+.letra { display: grid; place-items: center; width: 36px; height: 36px; flex-shrink: 0; border: 1.5px solid var(--tinta); border-radius: 50%; font-size: 18px; font-weight: 700; }
+.pontos { display: flex; gap: 3px; }
+.pontos span { width: 16px; border-top: 2px dashed var(--linha); }
+.pontos span.ok { border-top-color: var(--sangue); }
+.vazio { padding: 8px 0; font-size: 16px; font-style: italic; color: var(--suave); }
+
+/* ---------- Envelope do molde ---------- */
+.envelope { display: flex; flex-direction: column; gap: 6px; padding: 18px; background: var(--sangue); color: var(--creme); outline: 1px solid #F0D9A8; outline-offset: -6px; }
+.envelope .rotulo, .envelope .apoio { color: #F0D9A8; }
+.envelope h1 { font-size: 46px; line-height: 1; overflow-wrap: anywhere; }
+.envelope .botao { align-self: flex-start; min-height: 44px; border-color: #F0D9A8; color: var(--creme); }
+.envelope .botao:active { background: #5F1B12; }
+.entre { display: flex; justify-content: space-between; gap: 12px; }
+
+/* ---------- Calendário ---------- */
+.mes { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.seta { width: 44px; height: 44px; border: 0; background: none; color: var(--tinta); font: 700 24px var(--titulo); cursor: pointer; }
+.grade { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); row-gap: 2px; padding: 14px 8px; background: var(--cartao); border: 3px double var(--tinta); }
+.grade span { padding-bottom: 8px; text-align: center; font-size: 15px; font-style: italic; color: var(--suave); }
+.grade button { justify-self: center; width: 42px; height: 42px; padding: 0; border: 1.5px solid transparent; border-radius: 50%; background: none; color: var(--tinta); font: 19px var(--titulo); cursor: pointer; text-underline-offset: 5px; transition: border-color var(--rapido); }
+.grade button.domingo { color: var(--sangue); }
+.grade button.prazo { color: var(--sangue); font-weight: 700; text-decoration: underline dashed; }
+.grade button.hoje { font-weight: 700; background: var(--toque); }
+.grade button.dia-ativo { border-color: var(--sangue); }
+
+/* ---------- Etiquetas de compra ---------- */
+.etiquetas { display: flex; flex-direction: column; gap: 10px; }
+.etiqueta { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; width: 100%; padding: 14px 16px 14px 42px; border: 0; color: var(--tinta); text-align: left; font: inherit; cursor: pointer; background-color: var(--cartao); background-image: radial-gradient(circle at 21px 50%, var(--fundo) 0 6px, var(--tinta) 6px 7px, transparent 7.5px); clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 calc(100% - 14px), 0 14px); transition: background-color var(--rapido); }
+.etiqueta:active { background-color: var(--toque); }
+.preco { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.direita { text-align: right; }
+
+/* ---------- Referências ---------- */
+.galeria { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.foto { display: flex; flex-direction: column; gap: 6px; padding: 8px; border: 1px solid var(--tinta); background: var(--cartao); color: var(--tinta); text-align: left; font: 15px var(--titulo); cursor: pointer; }
+.foto img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; background: var(--toque); }
+.diario-foto { width: 100%; max-height: 240px; object-fit: cover; margin-top: 4px; }
+
+/* ---------- Números de custo ---------- */
+.contas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.conta { display: flex; flex-direction: column-reverse; gap: 2px; padding: 12px; background: var(--cartao); border: 1px solid var(--tinta); }
+.conta strong { font-size: 22px; font-variant-numeric: tabular-nums; }
+.conta span { font-size: 15px; color: var(--suave); }
+
+/* ---------- Medidas ---------- */
+.medida { display: flex; align-items: center; gap: 8px; min-height: 50px; border-bottom: 1px solid var(--linha); }
+.medida:last-child { border-bottom: 0; }
+.medida label { flex: 1; min-width: 0; font-size: 18px; }
+.medida input { width: 68px; height: 40px; padding: 0 4px; text-align: right; border: 0; border-bottom: 1.5px dashed var(--sangue); background: none; color: var(--tinta); font: 17px var(--nota); }
+.medida input:focus { background: var(--toque); }
+.medida .tirar { width: 36px; height: 44px; border: 0; background: none; color: var(--sangue); font: 700 20px var(--titulo); cursor: pointer; }
+
+/* ---------- Barra de navegação ---------- */
+nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); flex-shrink: 0; background: var(--tinta); box-shadow: 0 0 0 100vmax var(--tinta); clip-path: inset(0 -100vmax); }
+nav button { height: 60px; border: 0; background: none; color: var(--creme); font: 700 15px var(--titulo); cursor: pointer; transition: color var(--rapido); }
+nav button[aria-current="page"] { color: var(--mostarda); box-shadow: inset 0 3px 0 var(--mostarda); }
+
+/* ---------- Folha de formulário ---------- */
+.veu { position: fixed; inset: 0; z-index: 20; display: flex; align-items: flex-end; justify-content: center; background: rgba(43, 33, 24, .55); animation: veu .14s ease-out both; }
+.folha { width: 100%; max-width: 480px; max-height: 88%; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding-top: 18px; padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--cartao); border-top: 3px double var(--tinta); animation: subir .18s ease-out both; }
+.folha h2 { font-size: 26px; line-height: 1.1; }
+.folha form { display: flex; flex-direction: column; gap: 12px; }
+.campo { display: flex; flex-direction: column; gap: 4px; }
+.campo input, .campo select, .campo textarea { width: 100%; min-height: 46px; padding: 9px 10px; border: 1px solid var(--tinta); border-radius: 0; background: var(--campo); color: var(--tinta); font: 17px var(--titulo); }
+.campo textarea { min-height: 88px; resize: vertical; }
+@keyframes veu { from { opacity: 0; } }
+@keyframes subir { from { transform: translateY(24px); opacity: .6; } }
+
+/* Mensagem curta depois de uma ação. */
+#aviso { position: fixed; z-index: 30; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); max-width: calc(100% - 32px); padding: 10px 14px; background: var(--tinta); color: var(--creme); font-size: 16px; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div id="app">
+  <main id="tela"></main>
+  <nav id="barra" aria-label="Principal"></nav>
+</div>
+<div id="folha-raiz"></div>
+<div id="aviso" role="status" hidden></div>
+<input type="file" id="arquivo-imagem" accept="image/*" hidden>
+<input type="file" id="arquivo-backup" accept="application/json,.json" hidden>
+
+<script>
+"use strict";
+/* =====================================================================
+   ALINHAVO: planejador de cosplay
+   Organização do arquivo:
+   1. Utilidades        (datas, dinheiro, segurança do texto)
+   2. Dados iniciais    (projeto do Gambit 97)
+   3. Armazenamento     (onde os dados ficam guardados)
+   4. Cálculos          (progresso, próximos prazos, avisos)
+   5. Telas             (cada função devolve o HTML de uma tela)
+   6. Formulários       (uma folha genérica que serve para tudo)
+   7. Ações             (o que acontece em cada toque)
+   8. Inicialização
+   Quando virar APK, só a parte 3 e a função de notificações mudam.
+   ===================================================================== */
+
+/* ---------- 1. UTILIDADES ---------- */
+
+// Cria um identificador único para cada registro.
+const novoId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+
+// Escapa texto digitado antes de colocá-lo no HTML. Sem isso, um "<" quebraria a tela.
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+
+// Datas são guardadas como texto "AAAA-MM-DD" para não sofrer com fuso horário.
+const paraISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const deISO = (s) => { const [a, m, d] = s.split("-").map(Number); return new Date(a, m - 1, d); };
+const hojeISO = () => paraISO(new Date());
+const diasAte = (iso) => Math.round((deISO(iso) - deISO(hojeISO())) / 86400000);
+const dataCurta = (iso) => { const d = deISO(iso); return `${d.getDate()} ${MESES[d.getMonth()].slice(0, 3)}`; };
+const dataLonga = (iso) => { const d = deISO(iso); return `${d.getDate()} de ${MESES[d.getMonth()]}`; };
+
+// Mostra centavos só quando existem: "R$ 180" ou "R$ 180,50".
+const reais = (n) => { n = Number(n || 0); const c = Number.isInteger(n) ? 0 : 2; return "R$ " + n.toLocaleString("pt-BR", { minimumFractionDigits: c, maximumFractionDigits: 2 }); };
+
+// Aceita "12,50" e "12.50". Retorna 0 quando o campo está vazio.
+const numero = (v) => { const n = parseFloat(String(v ?? "").replace(",", ".")); return Number.isFinite(n) ? n : 0; };
+
+// Converte minutos em texto curto, como "1 h 30".
+const duracao = (min) => { min = Number(min) || 0; if (!min) return ""; const h = Math.floor(min / 60), m = min % 60; return h ? `${h} h${m ? " " + m : ""}` : `${m} min`; };
+
+// Letra da peça: A, B, C... depois de Z vira AA, AB...
+const letraDe = (i) => (i < 26 ? String.fromCharCode(65 + i) : "A" + String.fromCharCode(65 + i - 26));
+
+/* ---------- 2. DADOS INICIAIS ---------- */
+
+const TIPOS = { tecido: "Tecido", armadura: "Armadura", arma: "Arma", comprar: "Comprar" };
+const STATUS_COSPLAY = ["Ideia", "Planejando", "Em produção", "Pronto", "Aposentado"];
+const STATUS_COMPRA = ["A comprar", "A caminho", "Chegou"];
+
+function peca(nome, tipo) { return { id: novoId(), nome, tipo, feitas: 0, nota: "" }; }
+
+// O que o app traz na primeira abertura. Só contém o que já foi definido para o Gambit.
+function dadosIniciais() {
+  return {
+    versao: 1,
+    atualizadoEm: 0,
+    etapas: {
+      tecido: ["Molde", "Corte", "Costura", "Acabamento"],
+      armadura: ["Molde", "Corte", "Modelagem", "Selagem", "Pintura"],
+      arma: ["Núcleo", "Forma", "Acabamento", "Pintura"],
+      comprar: ["Escolher", "Pedir", "Receber"],
+    },
+    cosplays: [{
+      id: novoId(), nome: "Gambit", obra: "X-Men 97", status: "Planejando", orcamento: 0, eventoId: "",
+      pecas: [
+        peca("Sobretudo", "tecido"), peca("Macacão", "tecido"), peca("Peça magenta", "tecido"), peca("Capuz", "tecido"), peca("Luvas", "tecido"),
+        peca("Joelheiras", "armadura"), peca("Botas", "armadura"), peca("Gola e acabamentos", "armadura"),
+        peca("Bastão", "arma"), peca("Cartas", "arma"),
+        peca("Peruca", "comprar"), peca("Fivelas", "comprar"),
+      ],
+      tarefas: [], referencias: [], diario: [],
+    }],
+    eventos: [],
+    compras: [],
+    medidas: [
+      ...["Altura", "Busto", "Cintura", "Quadril"].map((nome) => ({ id: novoId(), grupo: "Corpo", nome, valor: "" })),
+      ...["Ombro a ombro", "Perímetro do joelho", "Perímetro da panturrilha"].map((nome) => ({ id: novoId(), grupo: "Armadura", nome, valor: "" })),
+      ...["Circunferência", "Testa ao queixo"].map((nome) => ({ id: novoId(), grupo: "Cabeça", nome, valor: "" })),
+    ],
+    avisos: { hora: "19:00", diasCompra: 3 },
+  };
+}
+
+/* ---------- 3. ARMAZENAMENTO ----------
+   Protótipo independente: dados e fotos ficam no IndexedDB do navegador.
+   A versão desktop usa SQLite e arquivos locais. */
+
+let estado = dadosIniciais();
+const loja = { falhou: false };
+
+function abrirLocal() {
+  return new Promise((ok, erro) => {
+    const pedido = indexedDB.open("alinhavo", 1);
+    pedido.onupgradeneeded = () => pedido.result.createObjectStore("dados");
+    pedido.onsuccess = () => ok(pedido.result);
+    pedido.onerror = () => erro(pedido.error);
+  });
+}
+async function lerLocal() {
+  try {
+    const bd = await abrirLocal();
+    return await new Promise((ok, erro) => {
+      const r = bd.transaction("dados").objectStore("dados").get("estado");
+      r.onsuccess = () => ok(r.result || null);
+      r.onerror = () => erro(r.error);
+    });
+  } catch { return null; }
+}
+async function gravarLocal() {
+  try {
+    const bd = await abrirLocal();
+    bd.transaction("dados", "readwrite").objectStore("dados").put(JSON.parse(JSON.stringify(estado)), "estado");
+  } catch { loja.falhou = true; }
+}
+
+function salvar() {
+  estado.atualizadoEm = Date.now();
+  gravarLocal();
+}
+
+// Reduz a foto antes de guardar. Referências não precisam de resolução máxima.
+function reduzirImagem(arquivo) {
+  return new Promise((ok, erro) => {
+    const url = URL.createObjectURL(arquivo);
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, 1400 / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob((b) => (b ? ok({ blob: b, dados: c.toDataURL("image/jpeg", 0.8) }) : erro(new Error("imagem"))), "image/jpeg", 0.8);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); erro(new Error("imagem")); };
+    img.src = url;
+  });
+}
+async function guardarImagem(arquivo) {
+  const { dados } = await reduzirImagem(arquivo);
+  return dados;
+}
+
+/* ---------- 4. CÁLCULOS ---------- */
+
+const cosplayPorId = (id) => estado.cosplays.find((c) => c.id === id);
+const eventoPorId = (id) => estado.eventos.find((e) => e.id === id);
+const etapasDe = (p) => estado.etapas[p.tipo] || [];
+
+// Progresso: etapas concluídas sobre o total de etapas de todas as peças.
+function progresso(c) {
+  let feitas = 0, total = 0;
+  c.pecas.forEach((p) => { const n = etapasDe(p).length; total += n; feitas += Math.min(p.feitas, n); });
+  return total ? Math.round((feitas / total) * 100) : 0;
+}
+const pecaPronta = (p) => p.feitas >= etapasDe(p).length;
+
+function etapaAtual(p) {
+  const e = etapasDe(p);
+  if (pecaPronta(p)) return "Concluída";
+  return (p.feitas ? "Etapa atual: " : "A começar: ") + e[p.feitas].toLowerCase();
+}
+
+function comprasDe(id) { return estado.compras.filter((i) => i.cosplayId === id); }
+
+const eventosFuturos = () => estado.eventos.filter((e) => e.data && diasAte(e.data) >= 0).sort((a, b) => a.data.localeCompare(b.data));
+
+// Escolhe o projeto em destaque: em produção primeiro e, depois, o de evento mais próximo.
+function cosplayAtivo() {
+  const peso = (c) => { const ev = eventoPorId(c.eventoId); return (c.status === "Em produção" ? 0 : 1e6) + (ev && ev.data ? diasAte(ev.data) : 5e5); };
+  const lista = estado.cosplays.filter((c) => !["Pronto", "Aposentado"].includes(c.status));
+  return lista.sort((a, b) => peso(a) - peso(b))[0] || null;
+}
+
+// Junta as tarefas abertas de todos os projetos. Sem prazo vai para o fim.
+function tarefasAbertas() {
+  const r = [];
+  estado.cosplays.forEach((c) => c.tarefas.forEach((t) => { if (!t.feita) r.push({ t, c }); }));
+  return r.sort((a, b) => (a.t.prazo || "9999").localeCompare(b.t.prazo || "9999"));
+}
+
+// Lista de avisos. No APK, a mesma lista alimentará as notificações do celular.
+function gerarAvisos() {
+  const r = [];
+  estado.compras.forEach((i) => {
+    if (i.status !== "A comprar" || !i.prazo) return;
+    const d = diasAte(i.prazo);
+    if (d <= estado.avisos.diasCompra) r.push({ data: i.prazo, rotulo: d < 0 ? "Compra atrasada" : d === 0 ? "Comprar hoje" : d === 1 ? "Comprar até amanhã" : `Comprar em ${d} dias`, texto: i.nome, tela: "compras" });
+  });
+  tarefasAbertas().forEach(({ t, c }) => {
+    if (t.prazo && diasAte(t.prazo) < 0) r.push({ data: t.prazo, rotulo: "Tarefa atrasada", texto: `${t.nome}, ${c.nome}`, tela: "cosplay", id: c.id });
+  });
+  return r.sort((a, b) => a.data.localeCompare(b.data));
+}
+
+// O que aparece em cada dia do calendário.
+function marcosDoDia(iso) {
+  const r = [];
+  estado.eventos.filter((e) => e.data === iso).forEach((e) => r.push({ tipo: "evento", id: e.id, titulo: e.nome, info: e.local || "Evento" }));
+  estado.cosplays.forEach((c) => c.tarefas.filter((t) => t.prazo === iso && !t.feita).forEach((t) => r.push({ tipo: "tarefa", id: c.id, titulo: t.nome, info: c.nome })));
+  estado.compras.filter((i) => i.prazo === iso && i.status === "A comprar").forEach((i) => r.push({ tipo: "compra", id: i.id, titulo: i.nome, info: "Comprar" }));
+  return r;
+}
+
+/* ---------- 5. TELAS ---------- */
+
+// Estado da interface. Não é salvo porque só descreve o que está aberto agora.
+const ui = { tela: "hoje", cosplayId: null, aba: "Peças", abaCompra: "A comprar", mes: null, dia: hojeISO() };
+
+const regua = (pct) => `<div class="regua" role="img" aria-label="Progresso de ${pct} em 100"><div class="costura" style="width:${pct}%"></div></div>`;
+
+function linhaTarefa(t, c, comProjeto) {
+  const peca_ = c.pecas.find((p) => p.id === t.pecaId);
+  const meta = [comProjeto ? c.nome : "", peca_ ? peca_.nome : "", t.prazo ? "até " + dataCurta(t.prazo) : "", duracao(t.minutos)].filter(Boolean).join(", ");
+  return `<div class="linha ${t.feita ? "feita" : ""}">
+    <label class="marcar"><input type="checkbox" aria-label="Concluir ${esc(t.nome)}" data-mudar="tarefa" data-c="${c.id}" data-id="${t.id}" ${t.feita ? "checked" : ""}></label>
+    <button class="linha-texto" style="background:none;border:0;padding:0;color:inherit;text-align:left;font:inherit;cursor:pointer" data-a="editarTarefa" data-c="${c.id}" data-id="${t.id}">
+      <span class="forte riscavel">${esc(t.nome)}</span>
+      ${meta ? `<span class="apoio italico">${esc(meta)}</span>` : ""}
+    </button>
+  </div>`;
+}
+
+function telaHoje() {
+  const agora = new Date();
+  const ev = eventosFuturos()[0];
+  const c = cosplayAtivo();
+  const d = ev ? diasAte(ev.data) : 0;
+  const titulo = !ev ? "Nenhum evento marcado" : d === 0 ? `Hoje é ${ev.nome}` : `Falta${d > 1 ? "m" : ""} ${d} dia${d > 1 ? "s" : ""} para ${ev.nome}`;
+  const avisos = gerarAvisos();
+  const abertas = tarefasAbertas().slice(0, 5);
+  const restantes = c ? c.pecas.filter((p) => !pecaPronta(p)).length : 0;
+  return `<div class="pagina">
+    <header class="cabeca">
+      <p class="rotulo">${DIAS[agora.getDay()]}, ${dataLonga(hojeISO())}</p>
+      <h1>${esc(titulo)}</h1>
+    </header>
+    ${c ? `<button class="cartao" data-a="abrirCosplay" data-id="${c.id}">
+      <span class="rotulo">Molde em andamento</span>
+      <span class="titulo-cartao">${esc(c.nome)}${c.obra ? ", " + esc(c.obra) : ""}</span>
+      ${regua(progresso(c))}
+      <span class="apoio">${progresso(c)} de 100. ${restantes ? `Falta${restantes > 1 ? "m" : ""} ${restantes} peça${restantes > 1 ? "s" : ""} para terminar.` : "Todas as peças prontas."}</span>
+    </button>` : `<button class="botao" data-a="novoCosplay">Criar o primeiro cosplay</button>`}
+    ${avisos.map((a) => `<button class="cartao" style="border:1px solid var(--sangue)" data-a="irAviso" data-tela="${a.tela}" data-id="${a.id || ""}"><span class="rotulo">${esc(a.rotulo)}</span><span class="forte">${esc(a.texto)}</span></button>`).join("")}
+    <section class="painel" aria-labelledby="pontos">
+      <h2 id="pontos" class="rotulo">Próximos pontos</h2>
+      ${abertas.length ? abertas.map(({ t, c: cc }) => linhaTarefa(t, cc, estado.cosplays.length > 1)).join("") : `<p class="vazio">Nenhuma tarefa aberta. Adicione o próximo passo.</p>`}
+    </section>
+    <button class="botao cheio" data-a="adicionarRapido">Adicionar</button>
+  </div>`;
+}
+
+function telaCosplays() {
+  return `<div class="pagina">
+    <header class="cabeca"><p class="rotulo">Catálogo de moldes</p><h1>Cosplays</h1></header>
+    ${estado.cosplays.map((c, i) => `<button class="cartao" data-a="abrirCosplay" data-id="${c.id}">
+      <span class="entre"><span class="rotulo">Molde Nº ${i + 1}</span><span class="rotulo">${esc(c.status)}</span></span>
+      <span class="titulo-cartao" style="font-size:40px;line-height:1">${esc(c.nome)}</span>
+      ${c.obra ? `<span class="apoio italico">${esc(c.obra)}</span>` : ""}
+      ${regua(progresso(c))}
+      <span class="apoio">${progresso(c)} de 100${eventoPorId(c.eventoId) ? ", " + esc(eventoPorId(c.eventoId).nome) : ""}</span>
+    </button>`).join("")}
+    <button class="botao" data-a="novoCosplay">Novo molde</button>
+  </div>`;
+}
+
+function abaPecas(c) {
+  const grupos = Object.keys(TIPOS).map((tipo) => {
+    const lista = c.pecas.filter((p) => p.tipo === tipo);
+    if (!lista.length) return "";
+    return `<section class="painel"><h2 class="rotulo">${TIPOS[tipo]}</h2>${lista.map((p) => {
+      const e = etapasDe(p);
+      return `<button class="linha" data-a="abrirPeca" data-c="${c.id}" data-id="${p.id}">
+        <span class="letra">${letraDe(c.pecas.indexOf(p))}</span>
+        <span class="linha-texto">
+          <span class="forte">${esc(p.nome)}</span>
+          <span class="pontos" aria-hidden="true">${e.map((_, i) => `<span class="${i < p.feitas ? "ok" : ""}"></span>`).join("")}</span>
+          <span class="apoio" style="font-size:15px">${esc(etapaAtual(p))}</span>
+        </span>
+      </button>`;
+    }).join("")}</section>`;
+  }).join("");
+  return `${grupos || `<div class="painel"><p class="vazio">Nenhuma peça neste molde.</p></div>`}
+    <button class="botao" data-a="novaPeca" data-c="${c.id}">Adicionar peça</button>`;
+}
+
+function abaTarefas(c) {
+  const ordenadas = [...c.tarefas].sort((a, b) => Number(a.feita) - Number(b.feita) || (a.prazo || "9999").localeCompare(b.prazo || "9999"));
+  return `<section class="painel">${ordenadas.length ? ordenadas.map((t) => linhaTarefa(t, c)).join("") : `<p class="vazio">Divida as peças em tarefas pequenas, com prazo e tempo estimado.</p>`}</section>
+    <button class="botao" data-a="novaTarefa" data-c="${c.id}">Adicionar tarefa</button>`;
+}
+
+function abaReferencias(c) {
+  return `${c.referencias.length ? `<div class="galeria">${c.referencias.map((r) => `<button class="foto" data-a="editarReferencia" data-c="${c.id}" data-id="${r.id}">
+      <img src="${esc(r.url)}" alt="${esc(r.nota || "Imagem de referência")}">${r.nota ? `<span>${esc(r.nota)}</span>` : ""}</button>`).join("")}</div>`
+    : `<div class="painel"><p class="vazio">Guarde aqui as imagens de frente, lado, costas e detalhes.</p></div>`}
+    <button class="botao" data-a="novaImagem" data-destino="referencia" data-c="${c.id}">Adicionar imagem</button>`;
+}
+
+function abaCustos(c) {
+  const itens = comprasDe(c.id);
+  const previsto = itens.reduce((s, i) => s + numero(i.preco), 0);
+  const comprado = itens.filter((i) => i.status !== "A comprar").reduce((s, i) => s + numero(i.preco), 0);
+  const orc = numero(c.orcamento);
+  return `<div class="contas">
+      <div class="conta"><span>Orçamento</span><strong>${reais(orc)}</strong></div>
+      <div class="conta"><span>Comprado</span><strong>${reais(comprado)}</strong></div>
+      <div class="conta"><span>Previsto</span><strong>${reais(previsto)}</strong></div>
+      <div class="conta"><span>${orc && previsto > orc ? "Acima do orçamento" : "Sobra prevista"}</span><strong>${reais(Math.abs(orc - previsto))}</strong></div>
+    </div>
+    <section class="painel"><h2 class="rotulo">Itens do molde</h2>${itens.length ? itens.map((i) => `<button class="linha" data-a="editarCompra" data-id="${i.id}"><span class="linha-texto"><span class="forte">${esc(i.nome)}</span><span class="apoio italico">${esc(i.status)}</span></span><span class="preco">${reais(i.preco)}</span></button>`).join("") : `<p class="vazio">Os itens de compra deste molde aparecem aqui.</p>`}</section>
+    <button class="botao" data-a="novaCompra" data-c="${c.id}">Adicionar item</button>`;
+}
+
+function abaDiario(c) {
+  const lista = [...c.diario].sort((a, b) => b.data.localeCompare(a.data));
+  return `<section class="painel">${lista.length ? lista.map((n) => `<button class="linha" data-a="editarDiario" data-c="${c.id}" data-id="${n.id}"><span class="linha-texto"><span class="rotulo">${dataLonga(n.data)}</span><span>${esc(n.texto)}</span>${n.url ? `<img class="diario-foto" src="${esc(n.url)}" alt="Foto do diário">` : ""}</span></button>`).join("") : `<p class="vazio">Anote soluções, erros e o que funcionou. Isso ajuda no próximo cosplay.</p>`}</section>
+    <div class="botoes"><button class="botao" data-a="novaNota" data-c="${c.id}">Escrever nota</button><button class="botao" data-a="novaImagem" data-destino="diario" data-c="${c.id}">Nota com foto</button></div>`;
+}
+
+function telaCosplay() {
+  const c = cosplayPorId(ui.cosplayId);
+  if (!c) { ui.tela = "cosplays"; return telaCosplays(); }
+  const n = estado.cosplays.indexOf(c) + 1;
+  const ev = eventoPorId(c.eventoId);
+  const abas = { "Peças": abaPecas, "Tarefas": abaTarefas, "Referências": abaReferencias, "Custos": abaCustos, "Diário": abaDiario };
+  return `<div class="pagina">
+    <button class="voltar" style="margin-block:-12px -8px" data-a="ir" data-tela="cosplays">&#8592; Catálogo</button>
+    <header class="envelope">
+      <span class="entre"><span class="rotulo">Molde Nº ${n}</span><span class="rotulo">${c.pecas.length} peça${c.pecas.length === 1 ? "" : "s"}</span></span>
+      <h1>${esc(c.nome)}</h1>
+      <p class="apoio italico">${esc([c.obra, ev ? `para ${ev.nome}${ev.data ? ", " + dataLonga(ev.data) : ""}` : ""].filter(Boolean).join(", ")) || "Sem evento definido"}</p>
+      <p class="apoio">${esc(c.status)}, ${progresso(c)} de 100</p>
+      <button class="botao" data-a="editarCosplay" data-id="${c.id}">Editar molde</button>
+    </header>
+    <div class="abas" role="tablist">${Object.keys(abas).map((a) => `<button role="tab" aria-selected="${a === ui.aba}" data-a="aba" data-aba="${a}">${a}</button>`).join("")}</div>
+    ${abas[ui.aba](c)}
+  </div>`;
+}
+
+function telaAgenda() {
+  const base = ui.mes || hojeISO().slice(0, 7);
+  const [a, m] = base.split("-").map(Number);
+  const inicio = new Date(a, m - 1, 1).getDay();
+  const total = new Date(a, m, 0).getDate();
+  const vazios = Array.from({ length: inicio }, () => `<i aria-hidden="true"></i>`).join("");
+  const dias = Array.from({ length: total }, (_, i) => {
+    const iso = paraISO(new Date(a, m - 1, i + 1));
+    const tem = marcosDoDia(iso).length > 0;
+    const cl = [new Date(a, m - 1, i + 1).getDay() === 0 ? "domingo" : "", tem ? "prazo" : "", iso === hojeISO() ? "hoje" : "", iso === ui.dia ? "dia-ativo" : ""].join(" ");
+    return `<button class="${cl}" aria-label="${i + 1} de ${MESES[m - 1]}${tem ? ", com prazo" : ""}" data-a="dia" data-dia="${iso}">${i + 1}</button>`;
+  }).join("");
+  const doDia = marcosDoDia(ui.dia);
+  const proximos = eventosFuturos().slice(0, 4);
+  const linhaMarco = (mc) => `<button class="linha" data-a="abrirMarco" data-tipo="${mc.tipo}" data-id="${mc.id}"><span class="linha-texto"><span class="forte">${esc(mc.titulo)}</span><span class="apoio italico">${esc(mc.info)}</span></span></button>`;
+  return `<div class="pagina">
+    <header class="cabeca">
+      <p class="rotulo">Calendário de ${a}</p>
+      <div class="mes"><h1>${MESES[m - 1][0].toUpperCase() + MESES[m - 1].slice(1)}</h1>
+        <span><button class="seta" aria-label="Mês anterior" data-a="mudarMes" data-p="-1">&#8592;</button><button class="seta" aria-label="Próximo mês" data-a="mudarMes" data-p="1">&#8594;</button></span></div>
+    </header>
+    <div class="grade">${["D", "S", "T", "Q", "Q", "S", "S"].map((d) => `<span>${d}</span>`).join("")}${vazios}${dias}</div>
+    <section class="painel"><h2 class="rotulo">${dataLonga(ui.dia)}</h2>${doDia.length ? doDia.map(linhaMarco).join("") : `<p class="vazio">Nada marcado neste dia.</p>`}</section>
+    <section class="painel"><h2 class="rotulo">Próximos eventos</h2>${proximos.length ? proximos.map((e) => linhaMarco({ tipo: "evento", id: e.id, titulo: e.nome, info: `${dataLonga(e.data)}, faltam ${diasAte(e.data)} dias` })).join("") : `<p class="vazio">Marque um evento para ver a contagem regressiva.</p>`}</section>
+    <button class="botao" data-a="novoEvento">Adicionar evento</button>
+  </div>`;
+}
+
+function telaCompras() {
+  const lista = estado.compras.filter((i) => i.status === ui.abaCompra).sort((a, b) => (a.prazo || "9999").localeCompare(b.prazo || "9999"));
+  const texto = (i) => i.status === "A comprar" ? (i.prazo ? "até " + dataCurta(i.prazo) : "sem prazo") : i.status === "A caminho" ? (i.prazo ? "chega " + dataCurta(i.prazo) : "a caminho") : "recebido";
+  return `<div class="pagina">
+    <header class="cabeca-linha"><div class="cabeca"><p class="rotulo">Lista do armarinho</p><h1>Compras</h1></div><span class="preco" style="font-size:22px">${reais(lista.reduce((s, i) => s + numero(i.preco), 0))}</span></header>
+    <div class="abas" role="tablist">${STATUS_COMPRA.map((s) => `<button role="tab" aria-selected="${s === ui.abaCompra}" data-a="abaCompra" data-aba="${s}">${s}</button>`).join("")}</div>
+    ${lista.length ? `<div class="etiquetas">${lista.map((i) => `<button class="etiqueta" data-a="editarCompra" data-id="${i.id}">
+      <span class="forte" style="overflow-wrap:anywhere">${esc(i.nome)}</span><span class="preco">${reais(i.preco)}</span>
+      <span class="apoio italico" style="color:var(--suave)">${esc(i.loja || (cosplayPorId(i.cosplayId) || {}).nome || "")}</span><span class="rotulo direita">${esc(texto(i))}</span></button>`).join("")}</div>` : `<div class="painel"><p class="vazio">Nada em ${esc(ui.abaCompra.toLowerCase())}.</p></div>`}
+    <button class="botao" data-a="novaCompra">Adicionar item</button>
+  </div>`;
+}
+
+function telaOficina() {
+  const grupos = [...new Set(estado.medidas.map((m) => m.grupo))];
+  return `<div class="pagina">
+    <header class="cabeca"><p class="rotulo">Oficina</p><h1>Minhas medidas</h1></header>
+    ${grupos.map((g) => `<section class="painel"><h2 class="rotulo">${esc(g)}</h2>${estado.medidas.filter((m) => m.grupo === g).map((m) => `<div class="medida">
+      <label for="medida-${m.id}">${esc(m.nome)}</label>
+      <input id="medida-${m.id}" inputmode="decimal" autocomplete="off" aria-label="${esc(m.nome)}, em centímetros" value="${esc(m.valor)}" data-mudar="medida" data-id="${m.id}">
+      <span class="apoio">cm</span>
+      <button class="tirar" aria-label="Remover ${esc(m.nome)}" data-a="removerMedida" data-id="${m.id}">&times;</button>
+    </div>`).join("")}</section>`).join("")}
+    <button class="botao" data-a="novaMedida">Adicionar medida</button>
+    <section class="painel"><h2 class="rotulo">Etapas por tipo de peça</h2>${Object.keys(TIPOS).map((t) => `<button class="linha" data-a="editarEtapas" data-tipo="${t}"><span class="linha-texto"><span class="forte">${TIPOS[t]}</span><span class="apoio">${esc(estado.etapas[t].join(", "))}</span></span></button>`).join("")}</section>
+    <section class="painel"><h2 class="rotulo">Avisos</h2>
+      <button class="linha" data-a="editarAvisos"><span class="linha-texto"><span class="forte">Resumo às ${esc(estado.avisos.hora)}</span><span class="apoio">Compras avisam ${estado.avisos.diasCompra} dias antes. Neste protótipo, os avisos aparecem em Hoje.</span></span></button>
+    </section>
+    <section class="painel"><h2 class="rotulo">Backup</h2><p class="apoio">O arquivo guarda textos, datas, medidas e valores. Fotos podem não ser incluídas.</p>
+      <div class="botoes" style="margin-top:10px"><button class="botao" data-a="exportar">Exportar</button><button class="botao" data-a="importar">Importar</button></div>
+    </section>
+  </div>`;
+}
+
+const TELAS = { hoje: telaHoje, cosplays: telaCosplays, cosplay: telaCosplay, agenda: telaAgenda, compras: telaCompras, oficina: telaOficina };
+const NAV = [["hoje", "Hoje"], ["cosplays", "Cosplays"], ["agenda", "Agenda"], ["compras", "Compras"], ["oficina", "Oficina"]];
+
+// Redesenha a tela. A animação de entrada só roda quando a tela muda.
+let ultimaTela = "";
+function desenhar() {
+  const tela = document.getElementById("tela");
+  const chave = ui.tela + (ui.tela === "cosplay" ? ui.cosplayId : "");
+  const mudou = chave !== ultimaTela;
+  const rolagem = tela.scrollTop;
+  tela.innerHTML = TELAS[ui.tela]();
+  tela.scrollTop = mudou ? 0 : rolagem;
+  if (mudou) tela.firstElementChild.classList.add("entrar");
+  ultimaTela = chave;
+  const ativa = ui.tela === "cosplay" ? "cosplays" : ui.tela;
+  document.getElementById("barra").innerHTML = NAV.map(([id, nome]) => `<button ${id === ativa ? 'aria-current="page"' : ""} data-a="ir" data-tela="${id}">${nome}</button>`).join("");
+}
+
+let tempoAviso;
+function avisar(texto) {
+  const el = document.getElementById("aviso");
+  el.textContent = texto; el.hidden = false;
+  clearTimeout(tempoAviso);
+  tempoAviso = setTimeout(() => { el.hidden = true; }, 2600);
+}
+
+/* ---------- 6. FORMULÁRIOS ----------
+   abrirFolha() monta qualquer formulário a partir de uma lista de campos.
+   Campo: { nome, rotulo, tipo, opcoes, valor, obrigatorio }. */
+
+let folhaAtual = null;
+
+function htmlCampo(c, i) {
+  const id = `campo-${i}`;
+  const req = c.obrigatorio ? "required" : "";
+  let controle;
+  if (c.tipo === "select") controle = `<select id="${id}" name="${c.nome}">${c.opcoes.map(([v, r]) => `<option value="${esc(v)}" ${String(v) === String(c.valor ?? "") ? "selected" : ""}>${esc(r)}</option>`).join("")}</select>`;
+  else if (c.tipo === "textarea") controle = `<textarea id="${id}" name="${c.nome}" ${req}>${esc(c.valor)}</textarea>`;
+  else controle = `<input id="${id}" name="${c.nome}" type="${c.tipo || "text"}" ${c.tipo === "number" ? 'inputmode="decimal" step="any" min="0"' : ""} value="${esc(c.valor)}" ${req} autocomplete="off">`;
+  return `<div class="campo"><label class="rotulo" for="${id}">${esc(c.rotulo)}</label>${controle}</div>`;
+}
+
+function abrirFolha({ titulo, campos = [], aoSalvar, aoExcluir, conteudo = "", textoSalvar = "Salvar" }) {
+  folhaAtual = { aoSalvar, aoExcluir, armado: false };
+  document.getElementById("folha-raiz").innerHTML = `<div class="veu" data-a="fecharVeu"><div class="folha" role="dialog" aria-modal="true" aria-label="${esc(titulo)}">
+    <h2>${esc(titulo)}</h2>${conteudo}
+    <form id="form-folha">${campos.map(htmlCampo).join("")}
+      <div class="botoes">
+        ${aoSalvar ? `<button class="botao cheio" type="submit">${esc(textoSalvar)}</button>` : ""}
+        <button class="botao" type="button" data-a="fecharFolha">${aoSalvar ? "Cancelar" : "Fechar"}</button>
+      </div>
+      ${aoExcluir ? `<button class="botao perigo" type="button" data-a="excluir">Excluir</button>` : ""}
+    </form></div></div>`;
+  const primeiro = document.querySelector(".folha input, .folha select, .folha textarea, .folha button");
+  if (primeiro) primeiro.focus({ preventScroll: true });
+}
+
+function fecharFolha() { document.getElementById("folha-raiz").innerHTML = ""; folhaAtual = null; }
+
+const opcoesCosplay = () => estado.cosplays.map((c) => [c.id, c.nome]);
+
+/* ---------- 7. AÇÕES ----------
+   Todo botão tem data-a="nomeDaAcao". O ouvinte no fim do arquivo chama a função certa. */
+
+function concluir(texto) { salvar(); fecharFolha(); desenhar(); if (texto) avisar(texto); }
+
+function formCosplay(c) {
+  abrirFolha({
+    titulo: c ? "Editar molde" : "Novo molde",
+    campos: [
+      { nome: "nome", rotulo: "Personagem", valor: c?.nome, obrigatorio: true },
+      { nome: "obra", rotulo: "Obra ou versão", valor: c?.obra },
+      { nome: "status", rotulo: "Situação", tipo: "select", opcoes: STATUS_COSPLAY.map((s) => [s, s]), valor: c?.status || "Ideia" },
+      { nome: "eventoId", rotulo: "Evento", tipo: "select", opcoes: [["", "Sem evento"], ...estado.eventos.map((e) => [e.id, e.nome])], valor: c?.eventoId },
+      { nome: "orcamento", rotulo: "Orçamento em reais", tipo: "number", valor: c?.orcamento || "" },
+    ],
+    aoSalvar(v) {
+      if (c) Object.assign(c, v, { orcamento: numero(v.orcamento) });
+      else {
+        const novo = { id: novoId(), ...v, orcamento: numero(v.orcamento), pecas: [], tarefas: [], referencias: [], diario: [] };
+        estado.cosplays.push(novo); ui.cosplayId = novo.id; ui.tela = "cosplay"; ui.aba = "Peças";
+      }
+      concluir("Molde salvo");
+    },
+    aoExcluir: c ? () => {
+      estado.cosplays = estado.cosplays.filter((x) => x !== c);
+      estado.compras = estado.compras.filter((i) => i.cosplayId !== c.id);
+      ui.tela = "cosplays"; concluir("Molde excluído");
+    } : null,
+  });
+}
+
+function formPeca(c, p) {
+  abrirFolha({
+    titulo: p ? "Editar peça" : "Nova peça",
+    campos: [
+      { nome: "nome", rotulo: "Nome da peça", valor: p?.nome, obrigatorio: true },
+      { nome: "tipo", rotulo: "Tipo", tipo: "select", opcoes: Object.entries(TIPOS), valor: p?.tipo || "tecido" },
+      { nome: "nota", rotulo: "Anotações", tipo: "textarea", valor: p?.nota },
+    ],
+    aoSalvar(v) {
+      if (p) { if (v.tipo !== p.tipo) p.feitas = 0; Object.assign(p, v); }
+      else c.pecas.push({ id: novoId(), feitas: 0, ...v });
+      concluir("Peça salva");
+    },
+    aoExcluir: p ? () => {
+      c.pecas = c.pecas.filter((x) => x !== p);
+      c.tarefas.forEach((t) => { if (t.pecaId === p.id) t.pecaId = ""; });
+      concluir("Peça excluída");
+    } : null,
+  });
+}
+
+function detalhePeca(c, p) {
+  const et = etapasDe(p);
+  abrirFolha({
+    titulo: p.nome,
+    conteudo: `<p class="apoio">${esc(TIPOS[p.tipo])}. Toque na etapa concluída.</p>
+      ${p.nota ? `<p class="apoio italico">${esc(p.nota)}</p>` : ""}
+      <div>${et.map((e, i) => `<label class="linha ${i < p.feitas ? "feita" : ""}" style="min-height:50px">
+        <span class="marcar"><input type="checkbox" data-mudar="etapa" data-c="${c.id}" data-id="${p.id}" data-i="${i}" ${i < p.feitas ? "checked" : ""}></span>
+        <span class="forte riscavel">${esc(e)}</span></label>`).join("")}</div>
+      <button class="botao" type="button" data-a="editarPeca" data-c="${c.id}" data-id="${p.id}">Editar peça</button>`,
+  });
+}
+
+function formTarefa(c, t) {
+  abrirFolha({
+    titulo: t ? "Editar tarefa" : "Nova tarefa",
+    campos: [
+      { nome: "cosplay", rotulo: "Molde", tipo: "select", opcoes: opcoesCosplay(), valor: c.id },
+      { nome: "nome", rotulo: "O que fazer", valor: t?.nome, obrigatorio: true },
+      { nome: "pecaId", rotulo: "Peça", tipo: "select", opcoes: [["", "Sem peça"], ...c.pecas.map((p) => [p.id, p.nome])], valor: t?.pecaId },
+      { nome: "prazo", rotulo: "Prazo", tipo: "date", valor: t?.prazo },
+      { nome: "minutos", rotulo: "Tempo estimado em minutos", tipo: "number", valor: t?.minutos || "" },
+    ],
+    aoSalvar(v) {
+      const destino = cosplayPorId(v.cosplay) || c;
+      const dados = { nome: v.nome, pecaId: destino === c ? v.pecaId : "", prazo: v.prazo, minutos: numero(v.minutos) };
+      if (t) {
+        Object.assign(t, dados);
+        if (destino !== c) { c.tarefas = c.tarefas.filter((x) => x !== t); destino.tarefas.push(t); }
+      } else destino.tarefas.push({ id: novoId(), feita: false, ...dados });
+      concluir("Tarefa salva");
+    },
+    aoExcluir: t ? () => { c.tarefas = c.tarefas.filter((x) => x !== t); concluir("Tarefa excluída"); } : null,
+  });
+}
+
+function formCompra(i, cosplayId) {
+  if (!estado.cosplays.length) { avisar("Crie um molde primeiro"); return; }
+  abrirFolha({
+    titulo: i ? "Editar item" : "Novo item",
+    conteudo: i?.link && /^https?:\/\//i.test(i.link) ? `<a class="botao" style="display:grid;place-items:center;text-decoration:none" href="${esc(i.link)}" target="_blank" rel="noopener">Abrir link da loja</a>` : "",
+    campos: [
+      { nome: "nome", rotulo: "Item", valor: i?.nome, obrigatorio: true },
+      { nome: "cosplayId", rotulo: "Molde", tipo: "select", opcoes: opcoesCosplay(), valor: i?.cosplayId || cosplayId || ui.cosplayId || estado.cosplays[0].id },
+      { nome: "status", rotulo: "Situação", tipo: "select", opcoes: STATUS_COMPRA.map((s) => [s, s]), valor: i?.status || "A comprar" },
+      { nome: "preco", rotulo: "Preço em reais", tipo: "number", valor: i?.preco || "" },
+      { nome: "loja", rotulo: "Loja", valor: i?.loja },
+      { nome: "prazo", rotulo: "Comprar até ou previsão de chegada", tipo: "date", valor: i?.prazo },
+      { nome: "link", rotulo: "Link", tipo: "url", valor: i?.link },
+    ],
+    aoSalvar(v) {
+      const dados = { ...v, preco: numero(v.preco) };
+      if (i) Object.assign(i, dados); else estado.compras.push({ id: novoId(), ...dados });
+      ui.abaCompra = v.status;
+      concluir("Item salvo");
+    },
+    aoExcluir: i ? () => { estado.compras = estado.compras.filter((x) => x !== i); concluir("Item excluído"); } : null,
+  });
+}
+
+function formEvento(e) {
+  abrirFolha({
+    titulo: e ? "Editar evento" : "Novo evento",
+    campos: [
+      { nome: "nome", rotulo: "Nome do evento", valor: e?.nome, obrigatorio: true },
+      { nome: "data", rotulo: "Data", tipo: "date", valor: e?.data || ui.dia, obrigatorio: true },
+      { nome: "local", rotulo: "Local", valor: e?.local },
+      { nome: "cosplayId", rotulo: "Cosplay", tipo: "select", opcoes: [["", "Definir depois"], ...opcoesCosplay()], valor: e ? (estado.cosplays.find((c) => c.eventoId === e.id) || {}).id : "" },
+    ],
+    aoSalvar(v) {
+      const { cosplayId, ...dados } = v;
+      let alvo = e;
+      if (e) Object.assign(e, dados); else { alvo = { id: novoId(), ...dados }; estado.eventos.push(alvo); }
+      estado.cosplays.forEach((c) => { if (c.eventoId === alvo.id) c.eventoId = ""; });
+      if (cosplayId) cosplayPorId(cosplayId).eventoId = alvo.id;
+      ui.dia = alvo.data; ui.mes = alvo.data.slice(0, 7);
+      concluir("Evento salvo");
+    },
+    aoExcluir: e ? () => {
+      estado.eventos = estado.eventos.filter((x) => x !== e);
+      estado.cosplays.forEach((c) => { if (c.eventoId === e.id) c.eventoId = ""; });
+      concluir("Evento excluído");
+    } : null,
+  });
+}
+
+function formNota(c, n, urlFoto) {
+  abrirFolha({
+    titulo: n ? "Editar nota" : "Nova nota",
+    conteudo: urlFoto || n?.url ? `<img class="diario-foto" src="${esc(urlFoto || n.url)}" alt="Foto da nota">` : "",
+    campos: [
+      { nome: "cosplay", rotulo: "Molde", tipo: "select", opcoes: opcoesCosplay(), valor: c.id },
+      { nome: "data", rotulo: "Data", tipo: "date", valor: n?.data || hojeISO(), obrigatorio: true },
+      { nome: "texto", rotulo: "Nota", tipo: "textarea", valor: n?.texto, obrigatorio: true },
+    ],
+    aoSalvar(v) {
+      const destino = cosplayPorId(v.cosplay) || c;
+      if (n) {
+        Object.assign(n, { data: v.data, texto: v.texto });
+        if (destino !== c) { c.diario = c.diario.filter((x) => x !== n); destino.diario.push(n); }
+      } else destino.diario.push({ id: novoId(), data: v.data, texto: v.texto, url: urlFoto || "" });
+      concluir("Nota salva");
+    },
+    aoExcluir: n ? () => { c.diario = c.diario.filter((x) => x !== n); concluir("Nota excluída"); } : null,
+  });
+}
+
+// Guarda quem pediu a imagem enquanto o seletor de arquivos está aberto.
+let pedidoImagem = null;
+
+const acoes = {
+  ir(d) { ui.tela = d.tela; desenhar(); },
+  aba(d) { ui.aba = d.aba; desenhar(); },
+  abaCompra(d) { ui.abaCompra = d.aba; desenhar(); },
+  dia(d) { ui.dia = d.dia; desenhar(); },
+  mudarMes(d) {
+    const [a, m] = (ui.mes || hojeISO().slice(0, 7)).split("-").map(Number);
+    ui.mes = paraISO(new Date(a, m - 1 + Number(d.p), 1)).slice(0, 7);
+    desenhar();
+  },
+  abrirCosplay(d) { ui.cosplayId = d.id; ui.tela = "cosplay"; ui.aba = "Peças"; desenhar(); },
+  irAviso(d) { if (d.tela === "cosplay") acoes.abrirCosplay(d); else { ui.tela = "compras"; ui.abaCompra = "A comprar"; desenhar(); } },
+  abrirMarco(d) {
+    if (d.tipo === "evento") formEvento(eventoPorId(d.id));
+    else if (d.tipo === "compra") formCompra(estado.compras.find((i) => i.id === d.id));
+    else { ui.aba = "Tarefas"; ui.cosplayId = d.id; ui.tela = "cosplay"; desenhar(); }
+  },
+  novoCosplay() { formCosplay(); },
+  editarCosplay(d) { formCosplay(cosplayPorId(d.id)); },
+  novaPeca(d) { formPeca(cosplayPorId(d.c)); },
+  abrirPeca(d) { const c = cosplayPorId(d.c); detalhePeca(c, c.pecas.find((p) => p.id === d.id)); },
+  editarPeca(d) { const c = cosplayPorId(d.c); formPeca(c, c.pecas.find((p) => p.id === d.id)); },
+  novaTarefa(d) { formTarefa(cosplayPorId(d.c)); },
+  editarTarefa(d) { const c = cosplayPorId(d.c); formTarefa(c, c.tarefas.find((t) => t.id === d.id)); },
+  novaCompra(d) { formCompra(null, d.c); },
+  editarCompra(d) { formCompra(estado.compras.find((i) => i.id === d.id)); },
+  novoEvento() { formEvento(); },
+  novaNota(d) { formNota(cosplayPorId(d.c)); },
+  editarDiario(d) { const c = cosplayPorId(d.c); formNota(c, c.diario.find((n) => n.id === d.id)); },
+  novaImagem(d) { pedidoImagem = { destino: d.destino, c: d.c }; document.getElementById("arquivo-imagem").click(); },
+  editarReferencia(d) {
+    const c = cosplayPorId(d.c), r = c.referencias.find((x) => x.id === d.id);
+    abrirFolha({
+      titulo: "Referência",
+      conteudo: `<img class="diario-foto" style="max-height:none" src="${esc(r.url)}" alt="${esc(r.nota || "Imagem de referência")}">`,
+      campos: [{ nome: "nota", rotulo: "Legenda", valor: r.nota }],
+      aoSalvar(v) { r.nota = v.nota; concluir("Legenda salva"); },
+      aoExcluir() { c.referencias = c.referencias.filter((x) => x !== r); concluir("Imagem excluída"); },
+    });
+  },
+  adicionarRapido() {
+    if (!estado.cosplays.length) { formCosplay(); return; }
+    const c = cosplayAtivo() || estado.cosplays[0];
+    abrirFolha({
+      titulo: "Adicionar",
+      conteudo: `<div class="botoes">
+        <button class="botao" type="button" data-a="novaTarefa" data-c="${c.id}">Tarefa</button>
+        <button class="botao" type="button" data-a="novaCompra" data-c="${c.id}">Compra</button>
+        <button class="botao" type="button" data-a="novaNota" data-c="${c.id}">Nota</button>
+        <button class="botao" type="button" data-a="novoEvento">Evento</button>
+      </div>`,
+    });
+  },
+  novaMedida() {
+    abrirFolha({
+      titulo: "Nova medida",
+      campos: [
+        { nome: "nome", rotulo: "Nome", obrigatorio: true },
+        { nome: "grupo", rotulo: "Grupo", tipo: "select", opcoes: [...new Set(["Corpo", "Armadura", "Cabeça", ...estado.medidas.map((m) => m.grupo)])].map((g) => [g, g]) },
+        { nome: "valor", rotulo: "Valor em centímetros", tipo: "number" },
+      ],
+      aoSalvar(v) { estado.medidas.push({ id: novoId(), ...v }); concluir("Medida salva"); },
+    });
+  },
+  removerMedida(d) { estado.medidas = estado.medidas.filter((m) => m.id !== d.id); salvar(); desenhar(); avisar("Medida removida"); },
+  editarEtapas(d) {
+    abrirFolha({
+      titulo: `Etapas: ${TIPOS[d.tipo]}`,
+      conteudo: `<p class="apoio">Escreva uma etapa por linha. Se a lista ficar menor, as peças mantêm só as etapas que ainda existem.</p>`,
+      campos: [{ nome: "lista", rotulo: "Etapas", tipo: "textarea", valor: estado.etapas[d.tipo].join("\n"), obrigatorio: true }],
+      aoSalvar(v) {
+        const lista = v.lista.split("\n").map((s) => s.trim()).filter(Boolean);
+        if (!lista.length) { avisar("Informe ao menos uma etapa"); return; }
+        estado.etapas[d.tipo] = lista;
+        estado.cosplays.forEach((c) => c.pecas.forEach((p) => { if (p.tipo === d.tipo) p.feitas = Math.min(p.feitas, lista.length); }));
+        concluir("Etapas salvas");
+      },
+    });
+  },
+  editarAvisos() {
+    abrirFolha({
+      titulo: "Avisos",
+      campos: [
+        { nome: "hora", rotulo: "Horário do resumo diário", tipo: "time", valor: estado.avisos.hora },
+        { nome: "diasCompra", rotulo: "Avisar compras quantos dias antes", tipo: "number", valor: estado.avisos.diasCompra },
+      ],
+      aoSalvar(v) { estado.avisos = { hora: v.hora || "19:00", diasCompra: Math.round(numero(v.diasCompra)) }; concluir("Avisos salvos"); },
+    });
+  },
+  async exportar() {
+    const texto = JSON.stringify(estado, null, 2);
+
+    abrirFolha({
+      titulo: "Exportar backup",
+      conteudo: `<p class="apoio">Copie este texto e guarde em um arquivo .json.</p>`,
+      campos: [{ nome: "copia", rotulo: "Dados do backup", tipo: "textarea", valor: texto }],
+    });
+  },
+  importar() { document.getElementById("arquivo-backup").click(); },
+  excluir() {
+    const b = document.querySelector('[data-a="excluir"]');
+    // Primeiro toque arma o botão; o segundo exclui. Evita perda por toque acidental.
+    if (!folhaAtual.armado) { folhaAtual.armado = true; b.classList.add("armado"); b.textContent = "Confirmar exclusão"; return; }
+    folhaAtual.aoExcluir();
+  },
+  fecharFolha() { fecharFolha(); },
+  fecharVeu(d, ev) { if (ev.target.classList.contains("veu")) fecharFolha(); },
+};
+
+// Um único ouvinte cuida de todos os toques do app.
+document.addEventListener("click", (ev) => {
+  const alvo = ev.target.closest("[data-a]");
+  if (alvo && acoes[alvo.dataset.a]) acoes[alvo.dataset.a](alvo.dataset, ev);
+});
+
+document.addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  if (!folhaAtual || !folhaAtual.aoSalvar) return;
+  folhaAtual.aoSalvar(Object.fromEntries(new FormData(ev.target)));
+});
+
+document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && folhaAtual) fecharFolha(); });
+
+// Mudanças em caixas de seleção e medidas.
+document.addEventListener("change", (ev) => {
+  const el = ev.target, d = el.dataset;
+  if (d.mudar === "tarefa") {
+    const c = cosplayPorId(d.c), t = c.tarefas.find((x) => x.id === d.id);
+    t.feita = el.checked;
+    // Mostra o risco primeiro e só depois reorganiza a lista.
+    el.closest(".linha").classList.toggle("feita", el.checked);
+    salvar(); setTimeout(desenhar, 240);
+  }
+  if (d.mudar === "etapa") {
+    const c = cosplayPorId(d.c), p = c.pecas.find((x) => x.id === d.id), i = Number(d.i);
+    // Marcar uma etapa conclui as anteriores; desmarcar reabre a partir dela.
+    p.feitas = el.checked ? i + 1 : i;
+    document.querySelectorAll('[data-mudar="etapa"]').forEach((x) => {
+      const ok = Number(x.dataset.i) < p.feitas;
+      x.checked = ok; x.closest(".linha").classList.toggle("feita", ok);
+    });
+    salvar(); desenhar();
+  }
+  if (d.mudar === "medida") {
+    estado.medidas.find((m) => m.id === d.id).valor = el.value.trim();
+    salvar();
+  }
+});
+
+document.getElementById("arquivo-imagem").addEventListener("change", async (ev) => {
+  const arquivo = ev.target.files[0]; ev.target.value = "";
+  if (!arquivo || !pedidoImagem) return;
+  const { destino, c } = pedidoImagem; pedidoImagem = null;
+  avisar("Preparando imagem");
+  try {
+    const url = await guardarImagem(arquivo);
+    const cos = cosplayPorId(c);
+    if (destino === "referencia") { cos.referencias.push({ id: novoId(), url, nota: "" }); salvar(); desenhar(); avisar("Imagem adicionada"); }
+    else formNota(cos, null, url);
+  } catch { avisar("Não foi possível abrir essa imagem. Tente outro arquivo."); }
+});
+
+document.getElementById("arquivo-backup").addEventListener("change", async (ev) => {
+  const arquivo = ev.target.files[0]; ev.target.value = "";
+  if (!arquivo) return;
+  try {
+    const dados = JSON.parse(await arquivo.text());
+    if (!dados || !Array.isArray(dados.cosplays) || !dados.etapas) throw new Error("formato");
+    estado = dados; salvar(); ui.tela = "hoje"; desenhar(); avisar("Backup importado");
+  } catch { avisar("Esse arquivo não é um backup do Alinhavo."); }
+});
+
+/* ---------- 8. INICIALIZAÇÃO ---------- */
+(async function iniciar() {
+  desenhar();                               // Mostra algo imediatamente.
+  const local = await lerLocal();
+  if (local && local.cosplays) { estado = local; desenhar(); }
+})();
+</script>
+
+</body></html>

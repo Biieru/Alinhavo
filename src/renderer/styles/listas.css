@@ -1,0 +1,20 @@
+/* ---------- Linhas de lista ---------- */
+.linha { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 58px; padding: 7px 0; border: 0; border-bottom: 1px solid var(--linha); background: none; color: var(--tinta); text-align: left; font: inherit; }
+.linha:last-child { border-bottom: 0; }
+button.linha { cursor: pointer; transition: background-color var(--rapido); }
+button.linha:active { background: var(--toque); }
+.linha-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+.forte { font-size: 18px; font-weight: 700; }
+.marcar { width: 44px; height: 44px; margin: -6px; flex-shrink: 0; display: grid; place-items: center; }
+.marcar input { width: 22px; height: 22px; margin: 0; accent-color: var(--sangue); }
+/* Risco desenhado da esquerda para a direita quando a tarefa é concluída. */
+.riscavel { align-self: flex-start; background-image: linear-gradient(var(--sangue), var(--sangue)); background-repeat: no-repeat; background-position: 0 55%; background-size: 0 2px; transition: background-size .18s ease-out; }
+.feita .riscavel { background-size: 100% 2px; }
+.letra { display: grid; place-items: center; width: 36px; height: 36px; flex-shrink: 0; border: 1.5px solid var(--tinta); border-radius: 50%; font-size: 18px; font-weight: 700; }
+.pontos { display: flex; gap: 3px; }
+.pontos span { width: 16px; border-top: 2px dashed var(--linha); }
+.pontos span.ok { border-top-color: var(--sangue); }
+.vazio { padding: 8px 0; font-size: 16px; font-style: italic; color: var(--suave); }
+
+/* Botão de texto dentro de uma linha de tarefa (antes era um style="" repetido no HTML). */
+.linha-texto.botao-texto { background: none; border: 0; padding: 0; color: inherit; text-align: left; font: inherit; cursor: pointer; }

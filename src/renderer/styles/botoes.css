@@ -1,0 +1,11 @@
+/* ---------- Botões ---------- */
+.botao { min-height: 48px; padding: 8px 14px; border: 1.5px dashed var(--tinta); background: transparent; color: var(--tinta); font: 700 17px var(--titulo); cursor: pointer; transition: background-color var(--rapido); }
+.botao:active { background: var(--toque); }
+.botao.cheio { border: 0; background: var(--tinta); color: var(--creme); }
+.botao.cheio:active { background: var(--sangue); }
+.botao.perigo { border-color: var(--sangue); color: var(--sangue); }
+.botao.perigo.armado { border-style: solid; background: var(--sangue); color: var(--creme); }
+.botoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.botoes > .botao { flex: 1 1 130px; }
+.voltar { display: flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: none; color: var(--tinta); font: 700 16px var(--titulo); cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--sangue); outline-offset: 2px; }

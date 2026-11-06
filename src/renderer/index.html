@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alinhavo</title>
+  </head>
+  <body>
+    <!-- Área principal: a tela atual e a barra de navegação (desenhadas por ts/desenhar.ts). -->
+    <div id="app">
+      <main id="tela"></main>
+      <nav id="barra" aria-label="Principal"></nav>
+    </div>
+
+    <!-- Onde aparecem os formulários em folha (ts/formularios/folha.ts). -->
+    <div id="folha-raiz"></div>
+
+    <!-- Mensagem curta depois de uma ação (ts/aviso.ts). -->
+    <div id="aviso" role="status" hidden></div>
+
+    <!-- Seletor de imagem, acionado pelos botões "Adicionar imagem" e "Nota com foto". -->
+    <input type="file" id="arquivo-imagem" accept="image/*" hidden />
+
+    <script type="module" src="./ts/main.ts"></script>
+  </body>
+</html>

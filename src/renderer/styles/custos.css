@@ -1,0 +1,5 @@
+/* ---------- Números de custo ---------- */
+.contas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.conta { display: flex; flex-direction: column-reverse; gap: 2px; padding: 12px; background: var(--cartao); border: 1px solid var(--tinta); }
+.conta strong { font-size: 22px; font-variant-numeric: tabular-nums; }
+.conta span { font-size: 15px; color: var(--suave); }

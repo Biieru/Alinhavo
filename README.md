@@ -136,4 +136,17 @@ node scripts/teste-e2e/fluxo.mjs --exe node_modules/electron/dist/electron.exe -
 - Electron, better-sqlite3, fflate e as demais dependências mantêm suas próprias licenças.
 - Gambit e X-Men são referências usadas no projeto de exemplo; as marcas e personagens pertencem aos seus titulares.
 
-O código do Alinhavo permanece sem uma licença de uso concedida (`UNLICENSED`).
+## Licença de uso
+
+O Alinhavo usa uma [licença própria](LICENSE) de código disponível, com uso gratuito
+e atribuição obrigatória nas redistribuições e apresentações públicas do projeto.
+
+- Qualquer pessoa pode usar o aplicativo para fins pessoais, profissionais ou comerciais.
+- É permitido estudar, compilar o código original e redistribuir cópias não modificadas,
+  preservando a licença e os créditos de **Gabriel Coelho**.
+- Modificar o código, alterar os recursos originais ou criar versões derivadas exige
+  autorização prévia e por escrito do autor, ressalvados os direitos obrigatórios em lei.
+- Seus próprios dados, fotos, configurações e backups podem ser usados e editados normalmente.
+- Os componentes de terceiros continuam sob suas próprias licenças.
+
+Esta licença tem restrição a modificações; por isso o projeto não é apresentado como open source.

@@ -15,6 +15,7 @@ directories:
 files:
   - out/**
   - package.json
+  - LICENSE
   # better-sqlite3: só o necessário no Windows x64 (o resto é código-fonte e binários de outros sistemas).
   - "!node_modules/better-sqlite3/{deps,src}/**"
   - "!node_modules/better-sqlite3/binding.gyp"
@@ -26,6 +27,8 @@ files:
 
 # Ícones fora do pacote .asar: o Windows lê o ícone da janela e das notificações direto do disco.
 extraResources:
+  - from: LICENSE
+    to: recursos/LICENCA-ALINHAVO.txt
   - from: resources
     to: recursos
     filter:
@@ -68,6 +71,7 @@ nsis:
   uninstallDisplayName: Alinhavo
   language: "1046"                         # português do Brasil
   runAfterFinish: true
+  license: LICENSE
   deleteAppDataOnUninstall: false          # desinstalar NUNCA apaga os dados e as fotos do usuário
 
 portable:

@@ -1,0 +1,80 @@
+LICENÇA ALINHAVO — USO COM ATRIBUIÇÃO, SEM MODIFICAÇÕES
+Versão 1.0 — 6 de novembro de 2026
+
+Copyright (c) 2026 Gabriel Coelho.
+Todos os direitos não concedidos expressamente são reservados.
+
+Esta licença abrange o código e os recursos originais do Alinhavo. Componentes
+de terceiros continuam sujeitos às respectivas licenças, conforme a seção 5.
+
+1. PERMISSÕES
+
+Qualquer pessoa pode, gratuitamente, baixar, instalar, executar e estudar o
+Alinhavo para fins pessoais, profissionais ou comerciais. Também é permitido
+compilar o código original pelos procedimentos documentados e fazer cópias
+de segurança, desde que o código e os recursos originais não sejam alterados.
+
+É permitida a redistribuição de cópias não modificadas do código ou do
+aplicativo, inclusive mediante cobrança, desde que os avisos de autoria,
+esta licença e os avisos de terceiros acompanhem a cópia. A atribuição deve
+ser acessível ao destinatário e não pode sugerir endosso do autor.
+
+2. ATRIBUIÇÃO
+
+Nas redistribuições e nas apresentações públicas do Alinhavo como produto
+ou projeto, mantenha a identificação:
+
+    Alinhavo — Gabriel Coelho
+    https://github.com/Biieru/Alinhavo
+
+Não é permitido remover ou ocultar os créditos e avisos de direitos autorais,
+apresentar o Alinhavo como criação própria ou atribuir sua autoria a terceiros.
+O uso privado do aplicativo não exige publicar créditos fora do próprio software.
+
+3. MODIFICAÇÕES E OBRAS DERIVADAS
+
+Esta licença não concede permissão para modificar, adaptar, traduzir ou criar
+obras derivadas do código ou dos recursos originais, nem para distribuir
+versões modificadas. Essas atividades exigem autorização prévia e por escrito
+de Gabriel Coelho, salvo quando forem permitidas por norma legal obrigatória.
+
+A restrição não impede configurar o aplicativo pelas funções disponíveis,
+inserir ou editar dados pessoais, importar ou exportar backups, nem produzir
+binários a partir do código original usando o processo documentado. Ajustes
+automáticos feitos pelas ferramentas desse processo não autorizam alterações
+manuais do código, da identidade visual ou dos recursos originais.
+
+4. DADOS E CONTEÚDO DO USUÁRIO
+
+Os dados, fotos, anotações e outros conteúdos inseridos pelo usuário não
+passam a pertencer ao autor do Alinhavo por causa desta licença. Seus
+titulares mantêm os direitos que já possuíam sobre esses conteúdos.
+
+5. COMPONENTES DE TERCEIROS
+
+Dependências, fontes, marcas, personagens e outros materiais de terceiros
+não recebem novas restrições por esta licença. Eles permanecem sujeitos aos
+direitos e às licenças de seus próprios titulares. Os avisos fornecidos com
+esses componentes devem ser preservados. Esta licença não restringe direitos
+de uso, estudo ou modificação que uma licença de terceiro conceda sobre o
+respectivo componente.
+
+6. AUSÊNCIA DE GARANTIA
+
+Na extensão permitida pela legislação aplicável, o software é fornecido no
+estado em que se encontra, sem garantia de funcionamento ininterrupto,
+adequação a uma finalidade específica ou ausência de erros. O usuário deve
+manter suas próprias cópias de segurança. Nenhum direito ou responsabilidade
+que a lei não permita excluir é afastado por esta cláusula.
+
+7. DIREITOS RESERVADOS E AUTORIZAÇÕES
+
+Nenhuma outra permissão é concedida implicitamente. Para solicitar autorização
+para alterações, versões derivadas ou usos que ultrapassem estas condições,
+contate o autor pelo perfil https://github.com/Biieru.
+
+As permissões desta licença estão condicionadas ao cumprimento dos seus
+termos e não afastam exceções e direitos previstos obrigatoriamente em lei.
+
+Esta é uma licença própria de código disponível (source-available), com
+restrição a modificações. Não é uma licença de software livre ou open source.
